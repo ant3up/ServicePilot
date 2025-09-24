@@ -40,17 +40,17 @@ export function Header() {
           </Button>
           <div className="flex items-center space-x-3">
             <Avatar className="w-8 h-8">
-              <AvatarImage src={user?.profileImageUrl || ""} alt={user?.firstName || "User"} />
+              <AvatarImage src={(user as any)?.profileImageUrl || ""} alt={(user as any)?.firstName || "User"} />
               <AvatarFallback>
-                {user?.firstName?.[0]}{user?.lastName?.[0]}
+                {(user as any)?.firstName?.[0]}{(user as any)?.lastName?.[0]}
               </AvatarFallback>
             </Avatar>
             <div className="text-sm">
               <div className="font-medium text-foreground" data-testid="text-user-name">
-                {user?.firstName} {user?.lastName}
+                {(user as any)?.firstName} {(user as any)?.lastName}
               </div>
               <div className="text-muted-foreground" data-testid="text-user-role">
-                {user?.role || "Admin"}
+                {(user as any)?.role || "Admin"}
               </div>
             </div>
           </div>

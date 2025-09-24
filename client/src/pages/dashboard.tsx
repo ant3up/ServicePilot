@@ -133,7 +133,7 @@ export default function Dashboard() {
             {/* Today's Schedule & Quick Actions */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
-                <ScheduleList jobs={metrics?.recentActivity?.jobs || []} />
+                <ScheduleList jobs={(metrics?.recentActivity || []).filter((item: any) => item.type === 'job').slice(0, 5)} />
               </div>
 
               {/* Quick Actions */}

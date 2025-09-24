@@ -394,11 +394,8 @@ export class DatabaseStorage implements IStorage {
       recentInvoices,
       recentCallLogs
     ] = await Promise.all([
-      // Total revenue from paid invoices
-      db.select({ 
-        total: count(invoices.id),
-        revenue: invoices.total 
-      })
+      // Total revenue from paid invoices - get all paid invoices
+      db.select()
       .from(invoices)
       .where(eq(invoices.status, "paid")),
       
@@ -407,11 +404,8 @@ export class DatabaseStorage implements IStorage {
       .from(jobs)
       .where(or(eq(jobs.status, "scheduled"), eq(jobs.status, "in_progress"))),
       
-      // Pending quotes count
-      db.select({ 
-        count: count(quotes.id),
-        total: quotes.total 
-      })
+      // Pending quotes - get all pending quotes
+      db.select()
       .from(quotes)
       .where(eq(quotes.status, "sent")),
       
@@ -446,17 +440,17 @@ export class DatabaseStorage implements IStorage {
     ]);
 
     return {
-      totalRevenue: totalRevenue.reduce((sum, inv) => sum + (parseFloat(inv.revenue || "0")), 0),
+      totalRevenue: totalRevenue.reduce((sum, inv) => sum + (parseFloat(inv.total || "0")), 0),
       activeJobs: activeJobs[0]?.count || 0,
       pendingQuotes: pendingQuotes.length,
       pendingQuotesValue: pendingQuotes.reduce((sum, quote) => sum + (parseFloat(quote.total || "0")), 0),
       todaysCalls: todaysCalls[0]?.count || 0,
-      recentActivity: {
-        jobs: recentJobs,
-        quotes: recentQuotes,
-        invoices: recentInvoices,
-        calls: recentCallLogs
-      }
+      recentActivity: [
+        ...recentJobs.map(job => ({ ...job, type: 'job', createdAt: job.createdAt })),
+        ...recentQuotes.map(quote => ({ ...quote, type: 'quote', createdAt: quote.createdAt })),
+        ...recentInvoices.map(invoice => ({ ...invoice, type: 'invoice', createdAt: invoice.createdAt })),
+        ...recentCallLogs.map(call => ({ ...call, type: 'call', createdAt: call.createdAt }))
+      ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 10)
     };
   }
 }
