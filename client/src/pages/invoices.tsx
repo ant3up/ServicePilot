@@ -169,7 +169,7 @@ export default function Invoices() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {invoices?.length === 0 ? (
+                    {(invoices as any[] || []).length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={7} className="text-center py-8">
                           <div className="flex flex-col items-center space-y-2">
@@ -182,7 +182,7 @@ export default function Invoices() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      invoices?.map((invoice: any) => (
+                      (invoices as any[] || []).map((invoice: any) => (
                         <TableRow key={invoice.id} data-testid={`invoice-row-${invoice.id}`}>
                           <TableCell className="font-medium" data-testid={`invoice-number-${invoice.id}`}>
                             {invoice.invoiceNumber}

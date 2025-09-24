@@ -185,7 +185,7 @@ export default function Jobs() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {jobs?.length === 0 ? (
+                    {(jobs as any[] || []).length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={8} className="text-center py-8">
                           <div className="flex flex-col items-center space-y-2">
@@ -202,7 +202,7 @@ export default function Jobs() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      jobs?.map((job: any) => (
+                      (jobs as any[] || []).map((job: any) => (
                         <TableRow key={job.id} data-testid={`job-row-${job.id}`}>
                           <TableCell className="font-medium" data-testid={`job-number-${job.id}`}>
                             {job.jobNumber}

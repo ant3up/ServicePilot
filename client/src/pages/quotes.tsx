@@ -174,7 +174,7 @@ export default function Quotes() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {quotes?.length === 0 ? (
+                    {(quotes as any[] || []).length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={7} className="text-center py-8">
                           <div className="flex flex-col items-center space-y-2">
@@ -191,7 +191,7 @@ export default function Quotes() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      quotes?.map((quote: any) => (
+                      (quotes as any[] || []).map((quote: any) => (
                         <TableRow key={quote.id} data-testid={`quote-row-${quote.id}`}>
                           <TableCell className="font-medium" data-testid={`quote-number-${quote.id}`}>
                             {quote.quoteNumber}
