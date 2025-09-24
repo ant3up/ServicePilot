@@ -145,6 +145,7 @@ export default function Dashboard() {
                   <Button 
                     variant="ghost" 
                     className="w-full justify-start"
+                    onClick={() => window.location.href = "/jobs"}
                     data-testid="button-create-job"
                   >
                     <Plus className="w-5 h-5 mr-3 text-primary" />
@@ -153,6 +154,7 @@ export default function Dashboard() {
                   <Button 
                     variant="ghost" 
                     className="w-full justify-start"
+                    onClick={() => window.location.href = "/quotes"}
                     data-testid="button-send-quote"
                   >
                     <FileText className="w-5 h-5 mr-3 text-primary" />
@@ -161,6 +163,7 @@ export default function Dashboard() {
                   <Button 
                     variant="ghost" 
                     className="w-full justify-start"
+                    onClick={() => window.location.href = "/customers"}
                     data-testid="button-add-customer"
                   >
                     <Users className="w-5 h-5 mr-3 text-primary" />
@@ -169,6 +172,7 @@ export default function Dashboard() {
                   <Button 
                     variant="ghost" 
                     className="w-full justify-start"
+                    onClick={() => window.location.href = "/scheduling"}
                     data-testid="button-view-schedule"
                   >
                     <Calendar className="w-5 h-5 mr-3 text-primary" />
@@ -177,6 +181,7 @@ export default function Dashboard() {
                   <Button 
                     variant="ghost" 
                     className="w-full justify-start"
+                    onClick={() => window.location.href = "/ai-agent"}
                     data-testid="button-ai-settings"
                   >
                     <Bot className="w-5 h-5 mr-3 text-primary" />
@@ -224,6 +229,7 @@ export default function Dashboard() {
                   <Button 
                     size="sm" 
                     variant="outline"
+                    onClick={() => window.location.href = "/quotes"}
                     data-testid="button-follow-up"
                   >
                     Follow Up
@@ -245,6 +251,7 @@ export default function Dashboard() {
                   <Button 
                     size="sm" 
                     variant="outline"
+                    onClick={() => window.location.href = "/invoices"}
                     data-testid="button-send-reminder"
                   >
                     Send Reminder
@@ -266,6 +273,7 @@ export default function Dashboard() {
                   <Button 
                     size="sm" 
                     variant="outline"
+                    onClick={() => window.location.href = "/scheduling"}
                     data-testid="button-review"
                   >
                     Review
