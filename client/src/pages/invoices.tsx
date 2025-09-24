@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
+import { InvoiceForm } from "@/components/invoices/invoice-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +15,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Invoices() {
+  const [showForm, setShowForm] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
   const [showSendModal, setShowSendModal] = useState(false);
   const queryClient = useQueryClient();
@@ -60,6 +62,11 @@ export default function Invoices() {
     setShowSendModal(true);
   };
 
+  const handleEditInvoice = (invoice: any) => {
+    setSelectedInvoice(invoice);
+    setShowForm(true);
+  };
+
   if (isLoading) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -92,7 +99,10 @@ export default function Invoices() {
                 >
                   Export
                 </Button>
-                <Button data-testid="button-new-invoice">
+                <Button 
+                  onClick={() => setShowForm(true)}
+                  data-testid="button-new-invoice"
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   New Invoice
                 </Button>
@@ -176,6 +186,7 @@ export default function Invoices() {
                             <FileText className="w-8 h-8 text-muted-foreground" />
                             <p className="text-muted-foreground">No invoices found</p>
                             <Button size="sm" data-testid="button-create-first-invoice">
+                              onClick={() => setShowForm(true)}
                               Create your first invoice
                             </Button>
                           </div>
@@ -234,6 +245,7 @@ export default function Invoices() {
                               <Button 
                                 size="sm" 
                                 variant="ghost"
+                                onClick={() => handleEditInvoice(invoice)}
                                 data-testid={`button-edit-invoice-${invoice.id}`}
                               >
                                 <Edit className="w-4 h-4" />
@@ -258,6 +270,22 @@ export default function Invoices() {
           </div>
         </main>
       </div>
+
+      {/* Invoice Form Modal */}
+      {showForm && (
+        <InvoiceForm 
+          invoice={selectedInvoice}
+          onClose={() => {
+            setShowForm(false);
+            setSelectedInvoice(null);
+          }}
+          onSuccess={() => {
+            setShowForm(false);
+            setSelectedInvoice(null);
+            queryClient.invalidateQueries({ queryKey: ["/api/invoices"] });
+          }}
+        />
+      )}
 
       {/* Send Invoice Modal */}
       {showSendModal && selectedInvoice && (

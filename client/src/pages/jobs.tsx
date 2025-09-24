@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
+import { JobForm } from "@/components/jobs/job-form";
+import { JobDetailView } from "@/components/jobs/job-detail-view";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +17,8 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function Jobs() {
   const [showForm, setShowForm] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<any>(null);
+  const [showJobDetail, setShowJobDetail] = useState(false);
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -42,6 +46,16 @@ export default function Jobs() {
       });
     },
   });
+
+  const handleViewJob = (job: any) => {
+    setSelectedJob(job);
+    setShowJobDetail(true);
+  };
+
+  const handleEditJob = (job: any) => {
+    setSelectedJob(job);
+    setShowForm(true);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -249,6 +263,7 @@ export default function Jobs() {
                               <Button 
                                 size="sm" 
                                 variant="ghost"
+                                onClick={() => handleViewJob(job)}
                                 data-testid={`button-view-job-${job.id}`}
                               >
                                 <Eye className="w-4 h-4" />
@@ -270,6 +285,7 @@ export default function Jobs() {
                               <Button 
                                 size="sm" 
                                 variant="ghost"
+                                onClick={() => handleEditJob(job)}
                                 data-testid={`button-edit-job-${job.id}`}
                               >
                                 <Edit className="w-4 h-4" />
@@ -294,6 +310,35 @@ export default function Jobs() {
           </div>
         </main>
       </div>
+
+      {/* Job Form Modal */}
+      {showForm && (
+        <JobForm 
+          job={selectedJob}
+          onClose={() => {
+            setShowForm(false);
+            setSelectedJob(null);
+          }}
+          onSuccess={() => {
+            setShowForm(false);
+            setSelectedJob(null);
+            queryClient.invalidateQueries({ queryKey: ["/api/jobs"] });
+          }}
+        />
+      )}
+
+      {/* Job Detail View */}
+      {showJobDetail && selectedJob && (
+        <div className="fixed inset-0 bg-background z-50 overflow-auto">
+          <JobDetailView 
+            jobId={selectedJob.id}
+            onClose={() => {
+              setShowJobDetail(false);
+              setSelectedJob(null);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }
