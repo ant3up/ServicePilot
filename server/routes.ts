@@ -226,6 +226,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/invoices/:id/send", isAuthenticated, async (req, res) => {
+    try {
+      // Mock sending invoice
+      res.json({ success: true, message: "Invoice sent successfully" });
+    } catch (error) {
+      console.error("Error sending invoice:", error);
+      res.status(500).json({ message: "Failed to send invoice" });
+    }
+  });
+
+  app.post("/api/jobs/:id/notes", isAuthenticated, async (req, res) => {
+    try {
+      const { note } = req.body;
+      // Mock adding note to job
+      res.json({ success: true, message: "Note added successfully" });
+    } catch (error) {
+      console.error("Error adding note:", error);
+      res.status(500).json({ message: "Failed to add note" });
+    }
+  });
+
   app.delete("/api/quotes/:id", isAuthenticated, async (req, res) => {
     try {
       await storage.deleteQuote(req.params.id);

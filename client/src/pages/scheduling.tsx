@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
+import { EnhancedScheduleView } from "@/components/scheduling/enhanced-schedule-view";
+import { JobForm } from "@/components/jobs/job-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +14,7 @@ import { Calendar, ChevronLeft, ChevronRight, Clock, User, MapPin } from "lucide
 export default function Scheduling() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<"day" | "week" | "month">("day");
+  const [showJobForm, setShowJobForm] = useState(false);
 
   const { data: jobs, isLoading } = useQuery({
     queryKey: ["/api/jobs"],
@@ -119,7 +122,12 @@ export default function Scheduling() {
               </div>
               <div className="flex items-center space-x-3">
                 <Button variant="outline" data-testid="button-today">Today</Button>
-                <Button data-testid="button-new-job">New Job</Button>
+                <Button 
+                  onClick={() => setShowJobForm(true)}
+                  data-testid="button-new-job"
+                >
+                  New Job
+                </Button>
                 <Button variant="secondary" data-testid="button-save-schedule">Save Schedule</Button>
               </div>
             </div>
@@ -270,42 +278,13 @@ export default function Scheduling() {
                       </div>
 
                       {/* Schedule Column */}
-                      <div className="col-span-10 space-y-4">
-                        {scheduleData.map((job) => (
-                          <Card key={job.id} className="p-4 cursor-pointer hover:shadow-md transition-shadow" data-testid={`schedule-job-${job.id}`}>
-                            <div className="flex items-start justify-between">
-                              <div className="flex items-start space-x-3">
-                                <Badge className={getStatusColor(job.status)} data-testid={`job-status-${job.id}`}>
-                                  {job.status.replace('_', ' ')}
-                                </Badge>
-                                <div>
-                                  <h4 className="font-medium text-foreground" data-testid={`job-title-${job.id}`}>
-                                    #{job.id} — {job.title}
-                                  </h4>
-                                  <div className="flex items-center space-x-4 mt-1 text-sm text-muted-foreground">
-                                    <div className="flex items-center space-x-1">
-                                      <Clock className="w-3 h-3" />
-                                      <span data-testid={`job-time-${job.id}`}>{job.time}</span>
-                                    </div>
-                                    <div className="flex items-center space-x-1">
-                                      <User className="w-3 h-3" />
-                                      <span data-testid={`job-technician-${job.id}`}>{job.technician}</span>
-                                    </div>
-                                  </div>
-                                  <div className="flex items-center space-x-1 mt-1 text-sm text-muted-foreground">
-                                    <MapPin className="w-3 h-3" />
-                                    <span data-testid={`job-address-${job.id}`}>{job.address}</span>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                <p className="font-medium text-foreground" data-testid={`job-amount-${job.id}`}>
-                                  {job.amount}
-                                </p>
-                              </div>
-                            </div>
-                          </Card>
-                        ))}
+                      <div className="col-span-11">
+                        <EnhancedScheduleView 
+                          selectedDate={selectedDate}
+                          viewMode={viewMode}
+                          onViewModeChange={setViewMode}
+                          onDateChange={setSelectedDate}
+                        />
                       </div>
                     </div>
                   </CardContent>
@@ -324,6 +303,17 @@ export default function Scheduling() {
           </div>
         </main>
       </div>
+
+      {/* Job Form Modal */}
+      {showJobForm && (
+        <JobForm 
+          onClose={() => setShowJobForm(false)}
+          onSuccess={() => {
+            setShowJobForm(false);
+            // Refresh jobs data
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -87,15 +87,14 @@ export function Sidebar() {
 
       {/* Bottom Actions */}
       <div className="p-4 border-t border-gray-700">
-        <Link href="/jobs">
-          <Button 
-            className="w-full mb-3" 
-            size="sm"
-            data-testid="button-new-job"
-          >
-            New Job
-          </Button>
-        </Link>
+        <Button 
+          className="w-full mb-3" 
+          size="sm"
+          onClick={() => window.location.href = "/jobs"}
+          data-testid="button-new-job"
+        >
+          New Job
+        </Button>
         <Link href="/settings">
           <a
             className="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"

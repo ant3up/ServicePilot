@@ -25,6 +25,7 @@ export function Header() {
           <Button 
             variant="ghost" 
             size="sm"
+            onClick={() => window.location.href = "/jobs"}
             data-testid="button-quick-create"
           >
             Quick Create
